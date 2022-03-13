@@ -24,7 +24,7 @@ func main() {
 	movies := e.Group("/api/movies")
 	{
 		movies.GET("", handler.GetAllMovies)
-		movies.GET("/:movieId", handler.Test)
+		movies.GET("/:movieId", handler.GetMovieById)
 
 	}
 

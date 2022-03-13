@@ -80,14 +80,3 @@ func LoginUser(c echo.Context) error {
 	responses.StatusOkLogin(c, tokenGenrated)
 	return err
 }
-
-func Test(c echo.Context) (err error) {
-	payload, err := middlewares.ParseToken(c)
-	if err != nil {
-		responses.Error401(c, err)
-		return
-	}
-
-	responses.StatusOK(c, payload)
-	return
-}

@@ -26,3 +26,47 @@ func ReadAllMovies() ([]entities.MovieEntity, error) {
 	defer queryResult.Close()
 	return data, nil
 }
+
+func ReadMovieById(param string) (*entities.MovieReviewEntity, error)  {
+	movie := entities.MovieReviewEntity{}
+	reviews := []entities.ReviewEntity{}
+
+	movieQuery, reviewQuery := queries.ReadMovieByIdQuery(param)
+	movieQueryResult, err := db.Mysql(movieQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	for movieQueryResult.Next() {
+		err := movieQueryResult.Scan(&movie.MovieId, &movie.Title, &movie.ReleaseYear, &movie.Production, &movie.Overview)
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
+	reviewQueyResult, err := db.Mysql(reviewQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	for reviewQueyResult.Next() {
+		review := new(entities.ReviewEntity)
+		err := reviewQueyResult.Scan(&review.Username, &review.Review)
+		if err != nil {
+			return nil, err
+		}
+		reviews = append(reviews, *review)
+	}
+
+	data := entities.MovieReviewEntity{
+		MovieId: movie.MovieId,
+		Title: movie.Title,
+		ReleaseYear: movie.ReleaseYear,
+		Production: movie.Production,
+		Overview: movie.Overview,
+		Reviews: reviews,
+	}
+
+	return &data, nil
+}
