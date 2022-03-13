@@ -5,23 +5,31 @@ import (
 	"go_api_echo/entities"
 	"go_api_echo/queries"
 	"go_api_echo/transport"
-	"go_api_echo/utils"
 )
 
-func CreateUser(data transport.RegisterRequest) {
+func CreateUser(data transport.RegisterRequest) error {
 	createUserQuery := queries.CreateUserQuery(data)
-	db.Mysql(createUserQuery)
+	_, err := db.Mysql(createUserQuery)
+	if err != nil {
+		return err
+	}
+	return err
 }
 
-func ReadUser(data transport.LoginRequest)(result entities.UserLoginEntity) {
+func ReadUser(data transport.LoginRequest)(*entities.UserLoginEntity, error) {
 	readUserQuery := queries.ReadUserQuery(data)
-	results := db.Mysql(readUserQuery)
-	
+	results, err := db.Mysql(readUserQuery)
+	if err != nil {
+		return nil, err
+	}
+	result := new(entities.UserLoginEntity)
 	for results.Next() {
 		err := results.Scan(&result.UserId, &result.Username, &result.Email, &result.FirstName, &result.LastName, &result.Password, )
-		utils.CheckError(err)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	defer results.Close()
-	return
+	return result, nil
 }

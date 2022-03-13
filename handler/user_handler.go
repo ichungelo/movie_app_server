@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"go_api_echo/entities"
 	"go_api_echo/middlewares"
 	"go_api_echo/repositories"
@@ -24,17 +25,20 @@ func RegisterUser(c echo.Context) (err error) {
 	}
 
 	if req.Password != req.ConfirmPassword {
-		responses.Error400(c, err)
-		return
+		responses.Error400(c, errors.New("password not match"))
+		return err
 	}
 
-	repositories.CreateUser(*req)
+	if err := repositories.CreateUser(*req); err != nil {
+		responses.Error401(c, err)
+		return err
+	}
 
 	responses.StatusOK(c, "Register Success")
 	return
 }
 
-func LoginUser(c echo.Context) (err error)  {
+func LoginUser(c echo.Context) error {
 	req := new(transport.LoginRequest)
 
 	if err := c.Bind(req); err != nil {
@@ -47,12 +51,16 @@ func LoginUser(c echo.Context) (err error)  {
 		return err
 	}
 
-	res := repositories.ReadUser(*req)
+	res, err := repositories.ReadUser(*req)
+	if err != nil {
+		responses.Error401(c, errors.New("invalid username or password"))
+		return err
+	}
 
 	passwordMatch := utils.CheckPassword(req.Password, res.Password)
 	if !passwordMatch {
-		responses.Error401(c, err)
-		return
+		responses.Error401(c, errors.New("invalid username or password"))
+		return err
 	}
 
 	payload := entities.JwtGenerateEntity{
@@ -63,10 +71,14 @@ func LoginUser(c echo.Context) (err error)  {
 		LastName: res.LastName,
 	}
 
-	tokenGenrated := middlewares.GenerateToken(payload)
+	tokenGenrated, err := middlewares.GenerateToken(payload)
+	if err != nil {
+		responses.Error500(c)
+		return err
+	}
 
 	responses.StatusOkLogin(c, tokenGenrated)
-	return
+	return err
 }
 
 func Test(c echo.Context) (err error) {

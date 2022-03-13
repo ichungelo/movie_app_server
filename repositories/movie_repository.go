@@ -6,9 +6,10 @@ import (
 	"go_api_echo/queries"
 )
 
-func ReadAllMovies() (data []entities.MovieEntity, err error) {
+func ReadAllMovies() ([]entities.MovieEntity, error) {
+	data := []entities.MovieEntity{}
 	readAllMoviesQuery := queries.ReadAllMoviesQuery()
-	queryResult := db.Mysql(readAllMoviesQuery)
+	queryResult, err := db.Mysql(readAllMoviesQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -23,5 +24,5 @@ func ReadAllMovies() (data []entities.MovieEntity, err error) {
 	}
 
 	defer queryResult.Close()
-	return
+	return data, nil
 }
