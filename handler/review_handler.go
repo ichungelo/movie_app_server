@@ -93,5 +93,38 @@ func PutReview(c echo.Context) error {
 
 	responses.StatusOK(c, "Review Updated")
 	return nil
+}
 
+func DeleteReview(c echo.Context) error {
+	movieIdString, reviewIdString := c.Param("movieId"), c.Param("reviewId")
+
+	movieId, err := strconv.Atoi(movieIdString)
+	if err != nil {
+		responses.Error404(c)
+		return err
+	}
+
+	reviewId, err := strconv.Atoi(reviewIdString)
+	if err != nil {
+		responses.Error404(c)
+		return err
+	}
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*entities.JwtGenerateEntity)
+	userId := claims.UserId
+
+	data := transport.DeleteReviewRequest{
+		ReviewId: reviewId,
+		UserId: userId,
+		MovieId: movieId,
+	}
+
+	if err := repositories.DeleteReview(data); err != nil {
+		responses.Error401(c, err)
+		return err
+	}
+
+	responses.StatusOK(c, "Review Deleted")
+	return nil
 }

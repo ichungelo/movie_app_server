@@ -26,3 +26,13 @@ func PutReview(data transport.PutReviewRequest) error {
 	return nil
 
 }
+
+func DeleteReview(data transport.DeleteReviewRequest) error {
+	deleteReviewQuery := queries.DeleteReviewQuery(data)
+
+	_, err := db.Mysql(deleteReviewQuery)
+	if err != nil {
+		return err
+	}
+	return nil
+}

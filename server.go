@@ -42,6 +42,7 @@ func main() {
 		restricted.GET("", handler.GetAllMovies)
 		restricted.POST("/:movieId/review", handler.PostReview)
 		restricted.PUT("/:movieId/review/:reviewId", handler.PutReview)
+		restricted.DELETE("/:movieId/review/:reviewId", handler.DeleteReview)
 
 	}
 
