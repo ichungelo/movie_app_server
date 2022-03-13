@@ -16,8 +16,17 @@ func main() {
 
 	e.Any("*", handler.ErrorEndpoint)
 
-	e.POST("/api/register", handler.RegisterUser)
-	e.POST("/api/login", handler.LoginUser)
-	e.GET("/", handler.Test)
+	auth := e.Group("/api/auth")
+	{
+		auth.POST("/register", handler.RegisterUser)
+		auth.POST("/login", handler.LoginUser)
+	}
+	movies := e.Group("/api/movies")
+	{
+		movies.GET("", handler.GetAllMovies)
+		movies.GET("/:movieId", handler.Test)
+
+	}
+
 	e.Logger.Fatal(e.Start(":5000"))
 }

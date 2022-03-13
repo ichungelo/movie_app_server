@@ -19,6 +19,11 @@ func ReadUserQuery(data transport.LoginRequest) (query string) {
 	return
 }
 
+func ReadAllMoviesQuery() (query string) {
+	query = "SELECT * FROM movies"
+	return
+}
+
 // func MoviesDbQueries(id string) {
 // 	GetAllMovies := "SELECT * FROM movies WHERE is_deleted = false"
 // 	GetMovieById := "SELECT movies.movie_id, "
