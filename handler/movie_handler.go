@@ -1,11 +1,16 @@
 package handler
 
 import (
-	"go_api_echo/middlewares"
+	// "go_api_echo/middlewares"
+	"go_api_echo/entities"
 	"go_api_echo/repositories"
 	"go_api_echo/responses"
 	"log"
 
+	// "log"
+	"strconv"
+
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,15 +25,25 @@ func GetAllMovies(c echo.Context) (err error)  {
 }
 
 func GetMovieById(c echo.Context) (err error) {
-	id := c.Param("movieId")
-	log.Println(id)
-	payload, err := middlewares.ParseToken(c)
+	idString := c.Param("movieId")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		responses.Error404(c)
+		return
+	}
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*entities.JwtGenerateEntity)
+	name := claims.UserId
+	log.Println(name)
+
+	// payload, err := middlewares.ParseToken(c)
 
 	if err != nil {
 		responses.Error401(c, err)
 		return
 	}
-	log.Println(payload)
+	// log.Println(payload)
 	res, err := repositories.ReadMovieById(id)
 	if err != nil {
 		responses.Error404(c)

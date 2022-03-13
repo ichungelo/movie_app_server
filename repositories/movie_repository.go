@@ -27,7 +27,7 @@ func ReadAllMovies() ([]entities.MovieEntity, error) {
 	return data, nil
 }
 
-func ReadMovieById(param string) (*entities.MovieReviewEntity, error)  {
+func ReadMovieById(param int) (*entities.MovieReviewEntity, error)  {
 	movie := entities.MovieReviewEntity{}
 	reviews := []entities.ReviewEntity{}
 

@@ -24,11 +24,15 @@ func ReadAllMoviesQuery() (query string) {
 	return
 }
 
-func ReadMovieByIdQuery(param string) (queryMovie string, queryReview string) {
-	queryMovie = fmt.Sprintf("SELECT * FROM movies WHERE movie_id='%s'", param)
-	queryReview = fmt.Sprintf("SELECT * FROM reviews WHERE movie_id=%s", param)
+func ReadMovieByIdQuery(param int) (queryMovie string, queryReview string) {
+	queryMovie = fmt.Sprintf("SELECT * FROM movies WHERE movie_id='%d'", param)
+	queryReview = fmt.Sprintf("SELECT * FROM reviews WHERE movie_id=%d", param)
 	return
 }
+
+// func CreateReviewByIdQuery(userId string, movieId string) (query string) {
+// 	query = fmt.Sprintf("INSERT INTO reviews (user_id, movie_id, review) VALUES ('%s', %s, '%s')", userId, mov )
+// }
 
 // func MoviesDbQueries(id string) {
 // 	GetAllMovies := "SELECT * FROM movies WHERE is_deleted = false"

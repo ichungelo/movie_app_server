@@ -3,7 +3,6 @@ package handler
 import (
 	"errors"
 	"go_api_echo/entities"
-	"go_api_echo/middlewares"
 	"go_api_echo/repositories"
 	"go_api_echo/responses"
 	"go_api_echo/transport"
@@ -71,7 +70,7 @@ func LoginUser(c echo.Context) error {
 		LastName: res.LastName,
 	}
 
-	tokenGenrated, err := middlewares.GenerateToken(payload)
+	tokenGenrated, err := utils.GenerateToken(payload)
 	if err != nil {
 		responses.Error500(c)
 		return err
