@@ -2,10 +2,10 @@ package handler
 
 import (
 	"errors"
-	"go_api_echo/entities"
 	"go_api_echo/repositories"
 	"go_api_echo/responses"
 	"go_api_echo/transport"
+	"go_api_echo/usecases"
 	"go_api_echo/utils"
 
 	"github.com/labstack/echo/v4"
@@ -62,20 +62,14 @@ func LoginUser(c echo.Context) error {
 		return err
 	}
 
-	payload := entities.JwtGenerateEntity{
-		UserId: res.UserId,
-		Username: res.Username,
-		Email: res.Email,
-		FirstName: res.FirstName,
-		LastName: res.LastName,
-	}
+	payload := usecases.JwtPayloadUsecase(res)
 
-	tokenGenrated, err := utils.GenerateToken(payload)
+	tokenGenerated, err := utils.GenerateToken(payload)
 	if err != nil {
 		responses.Error500(c)
 		return err
 	}
 
-	responses.StatusOkLogin(c, tokenGenrated)
+	responses.StatusOkLogin(c, tokenGenerated)
 	return nil
 }

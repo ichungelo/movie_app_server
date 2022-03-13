@@ -7,7 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GenerateToken(payload entities.JwtGenerateEntity) (string, error) {
+func GenerateToken(payload entities.JwtPayloadEntity) (string, error) {
 	claims := &entities.JwtGenerateEntity{
 		UserId:    payload.UserId,
 		Username:  payload.Username,

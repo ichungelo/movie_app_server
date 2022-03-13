@@ -47,7 +47,3 @@ func DeleteReviewQuery(data transport.DeleteReviewRequest) (query string) {
 	query = fmt.Sprintf("UPDATE reviews SET is_delete=true, deleted_at='%s' WHERE review_id=%d AND user_id='%s' AND movie_id=%d",time, data.ReviewId, data.UserId, data.MovieId)
 	return
 }
-// func MoviesDbQueries(id string) {
-// 	GetAllMovies := "SELECT * FROM movies WHERE is_deleted = false"
-// 	GetMovieById := "SELECT movies.movie_id, "
-// }

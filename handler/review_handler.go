@@ -5,6 +5,7 @@ import (
 	"go_api_echo/repositories"
 	"go_api_echo/responses"
 	"go_api_echo/transport"
+	"go_api_echo/usecases"
 	"strconv"
 
 	"github.com/golang-jwt/jwt"
@@ -34,11 +35,7 @@ func PostReview(c echo.Context) error  {
 	claims := user.Claims.(*entities.JwtGenerateEntity)
 	userId := claims.UserId
 
-	data := transport.CreatePostReviewRequest{
-		UserId: userId,
-		MovieId: movieId,
-		Review: req.Review,
-	}
+	data := usecases.PostReviewUsecase(userId, movieId, req.Review)
 
 	if err := repositories.CreateReview(data); err != nil {
 		responses.Error401(c, err)
@@ -79,12 +76,7 @@ func PutReview(c echo.Context) error {
 	claims := user.Claims.(*entities.JwtGenerateEntity)
 	userId := claims.UserId
 
-	data := transport.PutReviewRequest{
-		ReviewId: reviewId,
-		UserId: userId,
-		MovieId: movieId,
-		Review: req.Review,
-	}
+	data := usecases.PutReviewUsecase(reviewId, userId, movieId, req.Review)
 
 	if err := repositories.PutReview(data); err != nil {
 		responses.Error401(c, err)
@@ -114,11 +106,7 @@ func DeleteReview(c echo.Context) error {
 	claims := user.Claims.(*entities.JwtGenerateEntity)
 	userId := claims.UserId
 
-	data := transport.DeleteReviewRequest{
-		ReviewId: reviewId,
-		UserId: userId,
-		MovieId: movieId,
-	}
+	data := usecases.DeleteReviewUsecase(reviewId, userId, movieId)
 
 	if err := repositories.DeleteReview(data); err != nil {
 		responses.Error401(c, err)
