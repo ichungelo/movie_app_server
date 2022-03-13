@@ -52,7 +52,7 @@ func ReadMovieById(param int) (*entities.MovieReviewEntity, error)  {
 
 	for reviewQueryResult.Next() {
 		review := new(entities.ReviewEntity)
-		err := reviewQueryResult.Scan( &review.Username, &review.Review)
+		err := reviewQueryResult.Scan( &review.ReviewId, &review.Username, &review.Review)
 		if err != nil {
 			return nil, err
 		}

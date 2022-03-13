@@ -26,16 +26,20 @@ func ReadAllMoviesQuery() (query string) {
 
 func ReadMovieByIdQuery(param int) (queryMovie string, queryReview string) {
 	queryMovie = fmt.Sprintf("SELECT * FROM movies WHERE movie_id=%d", param)
-	queryReview = fmt.Sprintf("SELECT users.username, reviews.review FROM reviews INNER JOIN users ON users.user_id=reviews.user_id WHERE movie_id=%d", param)
+	queryReview = fmt.Sprintf("SELECT reviews.review_id, users.username, reviews.review FROM reviews INNER JOIN users ON users.user_id=reviews.user_id WHERE movie_id=%d", param)
 
 	return
 }
 
-func CreateReviewByIdQuery(data transport.CreateReviewResponse) (query string) {
+func CreateReviewByIdQuery(data transport.CreatePostReviewRequest) (query string) {
 	query = fmt.Sprintf("INSERT INTO reviews (user_id, movie_id, review) VALUES ('%s', %d, '%s')", data.UserId, data.MovieId, data.Review )
 	return
 }
 
+func PutReviewQuery(data transport.PutReviewRequest) (query string) {
+	query = fmt.Sprintf("UPDATE reviews SET review='%s' WHERE review_id=%d AND user_id='%s' AND movie_id=%d", data.Review, data.ReviewId, data.UserId, data.MovieId)
+	return
+}
 // func MoviesDbQueries(id string) {
 // 	GetAllMovies := "SELECT * FROM movies WHERE is_deleted = false"
 // 	GetMovieById := "SELECT movies.movie_id, "

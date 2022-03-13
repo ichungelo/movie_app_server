@@ -41,6 +41,8 @@ func main() {
 		restricted.GET("/:movieId", handler.GetMovieById)
 		restricted.GET("", handler.GetAllMovies)
 		restricted.POST("/:movieId/review", handler.PostReview)
+		restricted.PUT("/:movieId/review/:reviewId", handler.PutReview)
+
 	}
 
 	e.Logger.Fatal(e.Start(":5000"))
