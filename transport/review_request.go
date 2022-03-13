@@ -1,7 +1,5 @@
 package transport
 
-type CreateNoteRequest struct {
-	UserId string
-	MovieId int
-	Review string
+type CreateReviewRequest struct {
+	Review string `json:"review" validate:"required"`
 }

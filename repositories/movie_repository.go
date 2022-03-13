@@ -45,14 +45,14 @@ func ReadMovieById(param int) (*entities.MovieReviewEntity, error)  {
 
 	}
 
-	reviewQueyResult, err := db.Mysql(reviewQuery)
+	reviewQueryResult, err := db.Mysql(reviewQuery)
 	if err != nil {
 		return nil, err
 	}
 
-	for reviewQueyResult.Next() {
+	for reviewQueryResult.Next() {
 		review := new(entities.ReviewEntity)
-		err := reviewQueyResult.Scan(&review.Username, &review.Review)
+		err := reviewQueryResult.Scan( &review.Username, &review.Review)
 		if err != nil {
 			return nil, err
 		}

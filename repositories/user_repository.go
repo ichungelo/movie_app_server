@@ -13,7 +13,7 @@ func CreateUser(data transport.RegisterRequest) error {
 	if err != nil {
 		return err
 	}
-	return err
+	return nil
 }
 
 func ReadUser(data transport.LoginRequest)(*entities.UserLoginEntity, error) {

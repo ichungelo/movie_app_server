@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"go_api_echo/utils"
-	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -31,7 +30,6 @@ func Mysql(query string) (*sql.Rows, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Println("DB Connected")
 
 	insert, err := db.Query(query)
 	if err != nil {

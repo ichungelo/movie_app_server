@@ -11,10 +11,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func RegisterUser(c echo.Context) (err error) {
+func RegisterUser(c echo.Context) error {
 	req := new(transport.RegisterRequest)
 	if err := c.Bind(req); err != nil {
-		responses.Error500(c)
+		responses.Error400(c, err)
 		return err
 	}
 
@@ -25,7 +25,7 @@ func RegisterUser(c echo.Context) (err error) {
 
 	if req.Password != req.ConfirmPassword {
 		responses.Error400(c, errors.New("password not match"))
-		return err
+		return errors.New("password not match")
 	}
 
 	if err := repositories.CreateUser(*req); err != nil {
@@ -34,7 +34,7 @@ func RegisterUser(c echo.Context) (err error) {
 	}
 
 	responses.StatusOK(c, "Register Success")
-	return
+	return nil
 }
 
 func LoginUser(c echo.Context) error {
@@ -77,5 +77,5 @@ func LoginUser(c echo.Context) error {
 	}
 
 	responses.StatusOkLogin(c, tokenGenrated)
-	return err
+	return nil
 }

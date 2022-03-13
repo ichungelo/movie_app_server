@@ -17,29 +17,30 @@ func main() {
 	e.Validator = &middlewares.CustomValidator{Validator: validator.New()}
 
 	e.Any("*", handler.ErrorEndpoint)
-	secret, err :=utils.DotEnvGenerator("SECRET_KEY")
+	secret, err := utils.DotEnvGenerator("SECRET_KEY")
 	if err != nil {
 		panic(err)
 	}
 
 	config := middleware.JWTConfig{
-		Claims: &entities.JwtGenerateEntity{},
+		Claims:     &entities.JwtGenerateEntity{},
 		SigningKey: []byte(secret),
 	}
 
-	accessible := e.Group("/api")
+	// e.GET("test", handler.GetAllMovies)
+
+	accessible := e.Group("/api/auth")
 	{
-		auth := accessible.Group("/auth")
-		{
-			auth.POST("/register", handler.RegisterUser)
-			auth.POST("/login", handler.LoginUser)
-		}
-		accessible.GET("/movies", handler.GetAllMovies)
+		accessible.POST("/register", handler.RegisterUser)
+		accessible.POST("/login", handler.LoginUser)
 	}
-	restricted := e.Group("/api")
+
+	restricted := e.Group("/api/movies")
 	{
 		restricted.Use(middleware.JWTWithConfig(config))
-		restricted.GET("/movies/:movieId", handler.GetMovieById)
+		restricted.GET("/:movieId", handler.GetMovieById)
+		restricted.GET("", handler.GetAllMovies)
+		restricted.POST("/:movieId/review", handler.PostReview)
 	}
 
 	e.Logger.Fatal(e.Start(":5000"))
