@@ -22,6 +22,10 @@ migrate -path migrations/ -database 'mysql://user:password@tcp(host:port)/dbname
 ```
 migrate -path migrations/ -database 'mysql://user:password@tcp(host:port)/dbname?query' -verbose down
 ```
+### SEED DATABASE
+```
+mysql -u krisnas -p movie_app < migrations/seeds/*.sql
+```
 ---
 
 ## RUN SERVER
