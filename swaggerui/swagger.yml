@@ -1,0 +1,383 @@
+swagger: "2.0"
+info:
+  description: "Api documentation for go_api_no_framework"
+  version: "1.0.0"
+  title: "Movie Library"
+host: "localhost:5000"
+basePath: "/api"
+tags:
+- name: "Users"
+  description: "Everything about user data"
+- name: "Movies"
+  description: "Load data movies"
+- name: "Reviews"
+  description: "About movie reviews"
+schemes:
+- "http"
+paths:
+  /auth/register:
+    post:
+      tags:
+      - "Users"
+      summary: "Register new account"
+      operationId: "RegisterUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Register request"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/RegisterReq"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /auth/login:
+    post:
+      tags:
+      - "Users"
+      summary: "Login existing account"
+      operationId: "LoginUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Login Request"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/LoginReq"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/LoginResponse"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /movies:
+    get:
+      tags:
+      - "Movies"
+      summary: "Get all movies"
+      operationId: "GetAllMovies"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GetAllMovies"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorJwtResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - api_key: []
+  /movies/{movieId}:
+    get:
+      tags:
+      - "Movies"
+      summary: "Get movie by movie_id and display reviews"
+      operationId: "GetMovieById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "movieId"
+        in: "path"
+        description: "ID of selected movie"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GetMovieById"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorJwtResponse"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - api_key: []
+  /movies/{movieId}/review:
+    post:
+      tags:
+      - "Reviews"
+      summary: "Post new revews on specific movie"
+      operationId: "CreateReview"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "movieId"
+        in: "path"
+        description: "ID of selected movie"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "Add review request"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ReviewReq"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - api_key: []
+  /movies/{movieId}/review/{reviewId}:
+    put:
+      tags:
+      - "Reviews"
+      summary: "Modify existing reviews from logged in account"
+      operationId: "UpdateReview"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "movieId"
+        in: "path"
+        description: "ID of selected movie"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "reviewId"
+        in: "path"
+        description: "ID of selected review"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "Edit review request"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ReviewReq"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - api_key: []
+    delete:
+      tags:
+      - "Reviews"
+      summary: "Delete existing reviews from logged in account"
+      operationId: "DeleteReview"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "movieId"
+        in: "path"
+        description: "ID of selected movie"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "reviewId"
+        in: "path"
+        description: "ID of selected review"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - api_key: []
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  RegisterReq:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        minLength: 6
+      email:
+        type: "string"
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+      password:
+        type: "string"
+      confirm_password:
+        type: "string"
+  LoginReq:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+  ReviewReq:
+    type: "object"
+    properties:
+      review:
+        type: "string"
+  ApiResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: true
+      message:
+        type: "string"
+  Movie:
+    type: "object"
+    properties:
+      movie_id:
+        type: "integer"
+        format: "int64"
+      title:
+        type: "string"
+      release_year:
+        type: "string"
+      production:
+        type: "string"
+      overview:
+        type: "string"
+  Review:
+    type: "object"
+    properties:
+      review_id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      review:
+        type: "string"
+  GetAllMovies:
+    type: "array"
+    items:
+      $ref: "#/definitions/Movie"
+  GetMovieById:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+      messages:
+        type: "object"
+        properties:
+          movie_id:
+            type: "integer"
+            format: "int64"
+          title:
+            type: "string"
+          release_year:
+            type: "string"
+          production:
+            type: "string"
+          overview:
+            type: "string"
+          reviews:
+            type: "array"
+            items:
+              $ref: "#/definitions/Review"
+    
+  
+  LoginResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: true
+      message:
+        type: "string"
+      token:
+        type: "string"
+  ErrorResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+        default: false
+      message:
+        type: "string"
+  ErrorJwtResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"

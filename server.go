@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go_api_echo/db"
 	"go_api_echo/entities"
 	"go_api_echo/handler"
 	"go_api_echo/middlewares"
@@ -14,6 +15,8 @@ import (
 func main() {
 	e := echo.New()
 	e.Use(middleware.CORS())
+	db.InitDB()
+	db.Migrate()
 	e.Validator = &middlewares.CustomValidator{Validator: validator.New()}
 
 	e.Any("*", handler.ErrorEndpoint)
@@ -27,7 +30,7 @@ func main() {
 		SigningKey: []byte(secret),
 	}
 
-	// e.GET("test", handler.GetAllMovies)
+	e.Static("/swaggerui", "swaggerui")
 
 	accessible := e.Group("/api/auth")
 	{
@@ -43,7 +46,6 @@ func main() {
 		restricted.POST("/:movieId/review", handler.PostReview)
 		restricted.PUT("/:movieId/review/:reviewId", handler.PutReview)
 		restricted.DELETE("/:movieId/review/:reviewId", handler.DeleteReview)
-
 	}
 
 	e.Logger.Fatal(e.Start(":5000"))
