@@ -32,8 +32,6 @@ func main() {
 
 	e.Static("/swaggerui", "swaggerui")
 
-	// e.GET("test", handler.GetAllMovies)
-
 	accessible := e.Group("/api/auth")
 	{
 		accessible.POST("/register", handler.RegisterUser)

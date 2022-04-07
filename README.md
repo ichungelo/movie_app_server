@@ -16,11 +16,11 @@
 
 ### MIGRATE UP
 ```
-migrate -path migrations/ -database 'mysql://user:password@tcp(host:port)/dbname?query' -verbose up
+migrate -path migrations/ -database 'mysql://{user}:{password}@tcp({host}:{port})/dbname?query' -verbose up
 ```
 ### MIGRATE DOWN
 ```
-migrate -path migrations/ -database 'mysql://user:password@tcp(host:port)/dbname?query' -verbose down
+migrate -path migrations/ -database 'mysql://{user}:{password}@tcp({host}:{port})/dbname?query' -verbose down
 ```
 ### SEED DATABASE
 ```
@@ -39,6 +39,8 @@ $ go run .
 ```
 go run .
 ```
+## RUN SWAGGER
+[Click Here](http://localhost:5000/swaggerui)
 ---
 ## API SPEC
 
