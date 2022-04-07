@@ -24,7 +24,14 @@ migrate -path migrations/ -database 'mysql://user:password@tcp(host:port)/dbname
 ```
 ### SEED DATABASE
 ```
-mysql -u krisnas -p movie_app < migrations/seeds/*.sql
+mysql -u user -p movie_app < migrations/seeds/*.sql
+```
+### STEP BY STEP
+- create db name movie_app
+- then run command below :
+``` shell
+$ mysql -u {dbUser} -p movie_app < migrations/seeds/*.sql
+$ go run .
 ```
 ---
 
@@ -123,8 +130,8 @@ go run .
     "message": {
         "movie_id": "int",
         "title": "string",
-        "release_year": "year",
-        "production": "endpoint",
+        "year": "year",
+        "poster": "endpoint",
         "overview": "string",
         "reviews": [
           {

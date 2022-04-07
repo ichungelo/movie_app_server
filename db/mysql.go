@@ -4,13 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"go_api_echo/utils"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/mysql"
+	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/database/mysql"
+	_ "github.com/golang-migrate/migrate/source/file"
 )
 
-func Mysql(query string) (*sql.Rows, error) {
+var Db *sql.DB
+
+func InitDB() {
 	var (
 		host, _     = utils.DotEnvGenerator("DB_HOST")
 		port, _     = utils.DotEnvGenerator("DB_PORT")
@@ -23,30 +27,37 @@ func Mysql(query string) (*sql.Rows, error) {
 
 	db, err := sql.Open("mysql", mySqlInfo)
 	if err != nil {
-		return nil, err
+		panic(err.Error())
 	}
-	driver, _ := mysql.WithInstance(db, &mysql.Config{
-		MigrationsTable: "users",
-		DatabaseName:    "movie_app",
-		NoLock:          true,
-	})
 
+	err = db.Ping()
+	if err != nil {
+		panic(err.Error())
+	}
+	Db = db
+	log.Println("Connected to database")
+}
+
+func Migrate() {
+	if err := Db.Ping(); err != nil {
+		panic(err.Error())
+	}
+
+	driver, _ := mysql.WithInstance(Db, &mysql.Config{})
 	m, _ := migrate.NewWithDatabaseInstance(
-		fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s?query", user, password, host, port, database),
+		"file://migrations",
 		"mysql",
 		driver,
 	)
 
-	m.Steps(2)
-
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		return nil, err
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		panic(err.Error())
 	}
+}
 
-	insert, err := db.Query(query)
+func Mysql(query string) (*sql.Rows, error) {
+
+	insert, err := Db.Query(query)
 	if err != nil {
 		return nil, err
 	}
