@@ -202,3 +202,11 @@ go run .
       "message": "string"
   }
   ```
+
+```mermaid
+graph TD
+  A([A])-->B[/B/]
+  B-->C{C}
+  C-->|yes|D([D])
+  C-->|no|E([E])
+```
